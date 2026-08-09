@@ -3,20 +3,35 @@
 **A local, deterministic-first audit for hidden relationships between the train
 and test partitions of computational-pathology datasets.**
 
-Slide-of-Life finds biological linkages in the test and train sets (AKA: a lineage overlap), exact image duplication, and image
-similarity candidates *before* an overlap in the datasets cause a research-based evaluation to skew. It then evaluates the identified factual evidence against a named split policy and can create a review-required repair proposal.
+Slide-of-Life finds biological linkages in train/test splits, exact image
+duplication, and image-similarity candidates before hidden overlap can skew a
+research evaluation. It evaluates the identified factual evidence against a
+named split policy and can create a review-required repair proposal.
 
-> The following contents are written by Codex.
-> Built for OpenAI Build Week with Codex and optional GPT-5.6 schema assistance.
-> No OpenAI API key is needed for the demo or for normal deterministic audits.
+## Project origin and repository relationship
 
-## Judge quick start
+Slide-of-Life began as my project for the **OpenAI DevDay hackathon**, developed
+with OpenAI Codex. This repository is an ongoing extension of that work so the
+project can continue to evolve beyond the submitted hackathon version.
+
+The original hackathon repository is preserved at
+[`ppandya6/Slide-of-Life`](https://github.com/ppandya6/Slide-of-Life). The
+published `slide-of-life` package, GitHub releases, release tags, and publication
+infrastructure remain associated with that original repository. This continuation
+repository does not replace the original publication source.
+
+Codex assisted with the engineering workflow, including package and CLI
+implementation, tests, CI, release infrastructure, and documentation. Optional
+GPT-5.6 schema assistance is available, but the core audit pipeline remains local
+and deterministic. No OpenAI API key is required for the demo or for normal
+deterministic audits.
+
+## Quick start
 
 The demo is entirely synthetic, deterministic, and small. Allow about two
-minutes. **Python 3.11 or newer is required.** The commands below deliberately
-select Python 3.11 instead of relying on an ambiguous `python` command.
+minutes. **Python 3.11 or newer is required.**
 
-### Windows PowerShell (tested path)
+### Windows PowerShell
 
 First confirm that the Windows Python launcher can find Python 3.11:
 
@@ -29,13 +44,12 @@ If the second command fails, install Python 3.11 or newer from
 [python.org](https://www.python.org/downloads/windows/) and enable the Python
 launcher. Then open a new PowerShell window.
 
-Run the following from the directory in which you want the repository to live.
-This path does **not** require virtual-environment activation, so PowerShell's
-execution policy cannot block the demo:
+Clone this continuation repository and run the published package against the
+included synthetic demo:
 
 ```powershell
-git clone https://github.com/ppandya6/Slide-of-Life.git
-Set-Location Slide-of-Life
+git clone https://github.com/ppandya6/Slide-of-Life-Portfolio.git
+Set-Location Slide-of-Life-Portfolio
 py -3.11 -m venv .venv
 & .\.venv\Scripts\python.exe -m pip install --upgrade pip
 & .\.venv\Scripts\python.exe -m pip install "slide-of-life==0.1.0a1"
@@ -54,18 +68,17 @@ Invoke-Item artifacts\demo-audit\report.html
 ```
 
 > If `py -3.11` is unavailable but `py -3.12` is listed by `py -0p`, substitute
-> `py -3.12` in the two commands that create/check the environment. If `git` is
-> unavailable, download the repository ZIP from GitHub, extract it, open
-> PowerShell in that `Slide-of-Life` directory, and begin with the `py -3.11 -m
-> venv .venv` command.
+> `py -3.12` in the commands that create/check the environment. If `git` is
+> unavailable, download the repository ZIP from GitHub, extract it, and begin
+> with the virtual-environment command.
 
 ### macOS or Linux
 
 Use a Python 3.11+ interpreter. On systems where it is named `python3`, run:
 
 ```bash
-git clone https://github.com/ppandya6/Slide-of-Life.git
-cd Slide-of-Life
+git clone https://github.com/ppandya6/Slide-of-Life-Portfolio.git
+cd Slide-of-Life-Portfolio
 python3 --version
 python3 -m venv .venv
 .venv/bin/python -m pip install --upgrade pip
@@ -90,21 +103,19 @@ python3 -m webbrowser artifacts/demo-audit/report.html
 If the browser command is unavailable, open
 `artifacts/demo-audit/report.html` from Finder or your file manager.
 
-## What just happened?
+## What the demo does
 
-The generator created two six-row manifests and eleven tiny generated images;
-one twelfth image path is intentionally missing. The audit then compared train
-and test records, evaluated the evidence under the default policy, proposed a
-replacement partition, and wrote four files.
-
-All paths below are relative to the cloned `Slide-of-Life` directory:
+The generator creates two six-row manifests and eleven tiny generated images;
+one twelfth image path is intentionally missing. The audit compares train and
+test records, evaluates the evidence under the default policy, proposes a
+replacement partition, and writes four files.
 
 | Path | What it contains |
 | --- | --- |
 | `examples/demo/generated/train_manifest.csv` | Six synthetic training records |
 | `examples/demo/generated/test_manifest.csv` | Six synthetic test records |
 | `examples/demo/generated/images/` | Eleven deterministic 64×64 generated images |
-| `artifacts/demo-audit/report.html` | Standalone, human-readable report; open locally in a browser |
+| `artifacts/demo-audit/report.html` | Standalone, human-readable report |
 | `artifacts/demo-audit/report.json` | Full typed, machine-readable audit report |
 | `artifacts/demo-audit/findings.csv` | Policy-evaluated findings table |
 | `artifacts/demo-audit/repair_proposal.csv` | Proposed assignment for every input record; researcher review required |
@@ -129,7 +140,7 @@ The report contains **eight deliberately planted relationship categories**:
 
 The five confirmed cross-partition overlaps/duplicates are independently planted
 and are repair-eligible under the default policy. Similarity is kept separate
-from lineage identity, and the repair CSV is only a proposal—not proof that a
+from lineage identity, and the repair CSV is only a proposal, not proof that a
 split is correct.
 
 ## Why contamination matters
@@ -183,9 +194,11 @@ evaluation, repair proposal generation, and report serialization. GPT-5.6 never
 creates findings, decides policy outcomes, or makes repair decisions. The demo
 does not contact OpenAI and needs no credential.
 
-## Install without running the demo
+## Install the published package
 
-The published alpha requires Python 3.11+:
+The published alpha is released from the original
+[`ppandya6/Slide-of-Life`](https://github.com/ppandya6/Slide-of-Life) repository
+and requires Python 3.11+:
 
 ```bash
 python3 -m pip install "slide-of-life==0.1.0a1"
@@ -193,8 +206,7 @@ slide-of-life --version
 slide-of-life --help
 ```
 
-On Windows, use the explicit interpreter commands to avoid installing into a
-different or unsupported Python:
+On Windows:
 
 ```powershell
 py -3.11 -m pip install "slide-of-life==0.1.0a1"
@@ -202,9 +214,8 @@ slide-of-life --help
 ```
 
 The installed interface is the `slide-of-life` executable, not a
-`python -m slide_of_life` module. In a virtual environment, use
-`.\.venv\Scripts\slide-of-life.exe --help` as shown in the quick start.
-The deprecated `slidelineage` executable remains only as a compatibility alias.
+`python -m slide_of_life` module. The deprecated `slidelineage` executable
+remains only as a compatibility alias.
 
 ## Optional AI schema assistance
 
@@ -226,12 +237,11 @@ for the privacy boundary and acceptance workflow.
 - The [GitHub Action](action.yml) invokes the same CLI for policy-aware CI, writes
   reports before returning a policy-violation status, and keeps AI off by default.
 - The [Slide-of-Life Agent Skill](skills/slide-of-life/SKILL.md) wraps the CLI for
-  safe preflight, execution, and artifact interpretation; it does not duplicate
-  or replace the audit engine.
+  safe preflight, execution, and artifact interpretation.
 - The [detailed demo guide](examples/demo/README.md) documents fixture semantics,
   cleanup, and custom generation destinations.
 
-Pin the published Action release after checking out the repository data:
+The published GitHub Action release is still sourced from the original repository:
 
 ```yaml
 - uses: actions/checkout@v4
@@ -256,9 +266,10 @@ claim. Do not commit raw clinical data or credentials to this repository.
 
 ## Project links
 
-- [GitHub repository](https://github.com/ppandya6/Slide-of-Life)
-- [PyPI: `slide-of-life` 0.1.0a1](https://pypi.org/project/slide-of-life/0.1.0a1/)
-- [GitHub release `v0.1.0a1`](https://github.com/ppandya6/Slide-of-Life/releases/tag/v0.1.0a1)
+- **Continuation repository:** [ppandya6/Slide-of-Life-Portfolio](https://github.com/ppandya6/Slide-of-Life-Portfolio)
+- **Original OpenAI DevDay hackathon repository:** [ppandya6/Slide-of-Life](https://github.com/ppandya6/Slide-of-Life)
+- **Published package:** [PyPI `slide-of-life` 0.1.0a1](https://pypi.org/project/slide-of-life/0.1.0a1/)
+- **Original repository release:** [`v0.1.0a1`](https://github.com/ppandya6/Slide-of-Life/releases/tag/v0.1.0a1)
 - [Changelog](CHANGELOG.md)
 - [Scientific method](docs/scientific-method.md)
 - [Product specification](docs/product-spec.md)
@@ -273,9 +284,10 @@ mypy src
 pytest -q
 ```
 
-Release `0.1.0a1` is unchanged by this documentation update. Publication guidance
-is in [the release documentation](docs/releasing.md). Do not publish or create a
-release tag without explicit approval.
+This repository can continue development independently, but package publication,
+release tags, and the canonical published release remain associated with the
+original `ppandya6/Slide-of-Life` repository unless that relationship is
+explicitly changed in the future.
 
 ## License
 
